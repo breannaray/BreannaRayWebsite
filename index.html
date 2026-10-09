@@ -3,467 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinMetrics Pro | Financial Analysis & Portfolio Calculator - Breanna Ray</title>
-    <!-- Tailwind CSS for modern styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js for data visualization -->
+    <title>Breanna Ray | Financial Analysis Hub</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        finance: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                        }
-                    }
-                }
-            }
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+            --bg: #f8fafc;
+            --text: #1e293b;
         }
-    </script>
-</head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        header { background: var(--primary); color: white; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        header h1 { font-size: 1.5rem; }
+        
+        nav { background: #0f172a; padding: 0.75rem 2rem; display: flex; gap: 1.5rem; }
+        nav a { color: #cbd5e1; text-decoration: none; font-weight: 600; cursor: pointer; transition: color 0.2s; }
+        nav a:hover, nav a.active { color: white; border-bottom: 2px solid var(--secondary); }
 
-    <!-- Navigation Header -->
-    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-finance-600 text-white p-2 rounded-lg font-bold text-xl flex items-center justify-center">
-                        <i class="fa-solid fa-chart-line"></i>
-                    </div>
-                    <span class="font-bold text-xl tracking-wide">FinMetrics <span class="text-finance-600">Pro</span></span>
-                </div>
-                <!-- Desktop Nav Tabs -->
-                <nav class="hidden md:flex space-x-1 lg:space-x-4">
-                    <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-md text-sm font-medium transition-colors bg-finance-600 text-white">Home</button>
-                    <button onclick="switchTab('analysis')" id="nav-analysis" class="nav-btn px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-slate-800 text-slate-300">Financial Analysis</button>
-                    <button onclick="switchTab('market')" id="nav-market" class="nav-btn px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-slate-800 text-slate-300">Market Watch</button>
-                    <button onclick="switchTab('about')" id="nav-about" class="nav-btn px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-slate-800 text-slate-300">About</button>
-                    <button onclick="switchTab('contact')" id="nav-contact" class="nav-btn px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-slate-800 text-slate-300">Contact</button>
-                </nav>
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button onclick="toggleMobileMenu()" class="text-slate-300 hover:text-white focus:outline-none">
-                        <i class="fa-solid fa-bars text-2xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Mobile Nav Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-slate-800 px-4 pt-2 pb-4 space-y-1">
-            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-finance-600">Home</button>
-            <button onclick="switchTab('analysis'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-700">Financial Analysis</button>
-            <button onclick="switchTab('market'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-700">Market Watch</button>
-            <button onclick="switchTab('about'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-700">About</button>
-            <button onclick="switchTab('contact'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-700">Contact</button>
-        </div>
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; flex: 1; width: 100%; }
+        .tab-content { display: none; background: white; padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .tab-content.active { display: block; }
+
+        h2 { color: var(--primary); margin-bottom: 1rem; font-size: 1.8rem; }
+        p { margin-bottom: 1rem; color: #475569; }
+
+        /* Calculator Styles */
+        .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        label { display: block; font-weight: 600; margin-bottom: 0.4rem; color: #334155; }
+        input, select { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; }
+        button { background: var(--secondary); color: white; border: none; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background 0.2s; width: 100%; }
+        button:hover { background: #2563eb; }
+
+        .results-box { background: #f1f5f9; padding: 1.5rem; border-radius: 8px; border-left: 5px solid var(--accent); }
+        .results-box h3 { margin-bottom: 0.75rem; color: var(--primary); }
+        .metric-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0; }
+        .metric-row:last-child { border-bottom: none; }
+
+        footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 1.5rem; margin-top: auto; font-size: 0.9rem; }
+
+        @media(max-width: 768px) {
+            .calc-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Breanna Ray | Financial Analysis Hub</h1>
+        <p style="margin:0; color:#93c5fd;">AI Project</p>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav>
+        <a onclick="switchTab('home')" class="tab-link active" id="link-home">Home</a>
+        <a onclick="switchTab('about')" class="tab-link" id="link-about">About</a>
+        <a onclick="switchTab('analysis')" class="tab-link" id="link-analysis">Financial Analysis</a>
+        <a onclick="switchTab('contact')" class="tab-link" id="link-contact">Contact</a>
+    </nav>
 
-        <!-- ================= HOME TAB ================= -->
-        <section id="tab-home" class="tab-content space-y-8 animate-fade-in">
-            <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl p-8 md:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between">
-                <div class="md:w-2/3 space-y-6">
-                    <span class="bg-finance-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Academic Financial Platform</span>
-                    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">Advanced Portfolio & Stock Analysis Suite</h1>
-                    <p class="text-slate-300 text-lg leading-relaxed">
-                        Welcome to FinMetrics Pro. This web application provides rigorous quantitative financial analysis tools, calculating core metrics including Beta, Sharpe Ratios, Holding-Period Returns, Volatility, Valuation Multiples, and custom portfolio allocations.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-2">
-                        <button onclick="switchTab('analysis')" class="bg-finance-600 hover:bg-finance-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-200 flex items-center space-x-2">
-                            <span>Launch Calculator</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                        <button onclick="switchTab('market')" class="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-6 py-3 rounded-xl shadow transition duration-200">
-                            View Market Watch
-                        </button>
-                    </div>
-                </div>
-                <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center">
-                    <div class="bg-slate-800/80 border border-slate-700 p-6 rounded-2xl shadow-inner text-center space-y-4 w-full max-w-xs">
-                        <div class="text-finance-400 text-5xl">
-                            <i class="fa-solid fa-chart-pie"></i>
-                        </div>
-                        <h3 class="font-bold text-xl text-white">Quantitative Metrics</h3>
-                        <p class="text-xs text-slate-400">Instant computation of risk-adjusted returns, betas, and valuation multiples.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Features Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
-                    <div class="text-finance-600 text-2xl mb-4"><i class="fa-solid fa-shield-halved"></i></div>
-                    <h3 class="font-bold text-lg text-slate-900 mb-2">Risk & Return Analysis</h3>
-                    <p class="text-sm text-slate-600">Evaluate systemic risk (Beta), total volatility (standard deviation), and excess returns over benchmarks.</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
-                    <div class="text-finance-600 text-2xl mb-4"><i class="fa-solid fa-scale-balanced"></i></div>
-                    <h3 class="font-bold text-lg text-slate-900 mb-2">Performance Ratios</h3>
-                    <p class="text-sm text-slate-600">Compute Sharpe ratios, holding-period returns, and annualized figures for single assets or custom portfolios.</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
-                    <div class="text-finance-600 text-2xl mb-4"><i class="fa-solid fa-building-columns"></i></div>
-                    <h3 class="font-bold text-lg text-slate-900 mb-2">Fundamental Multiples</h3>
-                    <p class="text-sm text-slate-600">Examine firm characteristics including Market Capitalization, P/E ratios, and Dividend Yields.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= FINANCIAL ANALYSIS TAB ================= -->
-        <section id="tab-analysis" class="tab-content hidden space-y-8 animate-fade-in">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b border-slate-100">
-                    <div>
-                        <h2 class="text-2xl font-bold text-slate-900">Financial Analysis Calculator</h2>
-                        <p class="text-sm text-slate-500">Configure parameters below to compute risk, return, performance measures, and valuation metrics.</p>
-                    </div>
-                    <div class="mt-4 md:mt-0">
-                        <button onclick="runCalculations()" class="bg-finance-600 hover:bg-finance-700 text-white font-medium px-5 py-2 rounded-lg shadow transition text-sm">
-                            <i class="fa-solid fa-calculator mr-2"></i> Recalculate Metrics
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Input Parameters Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Select Asset / Security</label>
-                        <select id="calc-asset" onchange="runCalculations()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-medium focus:ring-2 focus:ring-finance-600 focus:outline-none">
-                            <option value="AAPL">Apple Inc. (AAPL)</option>
-                            <option value="MSFT">Microsoft Corp. (MSFT)</option>
-                            <option value="GOOGL">Alphabet Inc. (GOOGL)</option>
-                            <option value="AMZN">Amazon.com Inc. (AMZN)</option>
-                            <option value="JPM">JPMorgan Chase & Co. (JPM)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Initial Price ($)</label>
-                        <input type="number" id="calc-p0" value="150.00" oninput="runCalculations()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-medium focus:ring-2 focus:ring-finance-600 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Ending Price ($)</label>
-                        <input type="number" id="calc-pt" value="185.50" oninput="runCalculations()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-medium focus:ring-2 focus:ring-finance-600 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Time Horizon (Years)</label>
-                        <input type="number" id="calc-years" value="1.0" step="0.1" oninput="runCalculations()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-medium focus:ring-2 focus:ring-finance-600 focus:outline-none">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Results Display Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Metric 1 -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-finance-600">
-                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Holding-Period Return (HPR)</span>
-                    <div class="text-2xl font-bold text-slate-900 mt-1" id="res-hpr">--</div>
-                    <span class="text-xs text-slate-500 mt-1 block">Total percentage gain/loss over period</span>
-                </div>
-                <!-- Metric 2 -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-blue-600">
-                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Annualized Return</span>
-                    <div class="text-2xl font-bold text-slate-900 mt-1" id="res-annualized">--</div>
-                    <span class="text-xs text-slate-500 mt-1 block">Compound annual growth rate (CAGR)</span>
-                </div>
-                <!-- Metric 3 -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-amber-500">
-                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Sharpe Ratio (Rf = 2%)</span>
-                    <div class="text-2xl font-bold text-slate-900 mt-1" id="res-sharpe">--</div>
-                    <span class="text-xs text-slate-500 mt-1 block">Risk-adjusted performance measure</span>
-                </div>
-                <!-- Metric 4 -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-purple-600">
-                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Beta & Volatility</span>
-                    <div class="text-xl font-bold text-slate-900 mt-1" id="res-beta-vol">--</div>
-                    <span class="text-xs text-slate-500 mt-1 block">Systematic risk (Beta) & Std. Dev.</span>
-                </div>
-            </div>
-
-            <!-- Charts Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                    <h3 class="text-lg font-bold text-slate-900 mb-4">Historical Return Comparison</h3>
-                    <div class="h-64 relative">
-                        <canvas id="returnChart"></canvas>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                    <h3 class="text-lg font-bold text-slate-900 mb-4">Risk vs. Return Profile</h3>
-                    <div class="h-64 relative">
-                        <canvas id="riskReturnChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= MARKET WATCH TAB ================= -->
-        <section id="tab-market" class="tab-content hidden space-y-8 animate-fade-in">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-900">Market & Firm Characteristics</h2>
-                    <p class="text-sm text-slate-500">Fundamental metrics, P/E ratios, dividend yields, and market capitalizations for benchmark assets.</p>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-slate-200 text-sm">
-                        <thead class="bg-slate-50 text-slate-600 font-semibold uppercase tracking-wider">
-                            <tr>
-                                <th class="px-6 py-3 text-left">Ticker</th>
-                                <th class="px-6 py-3 text-left">Company Name</th>
-                                <th class="px-6 py-3 text-right">Stock Price</th>
-                                <th class="px-6 py-3 text-right">Market Cap</th>
-                                <th class="px-6 py-3 text-right">P/E Ratio</th>
-                                <th class="px-6 py-3 text-right">Dividend Yield</th>
-                                <th class="px-6 py-3 text-right">Beta</th>
-                            </tr>
-                        </thead>
-                        <tbody id="market-table-body" class="divide-y divide-slate-200 bg-white">
-                            <!-- Populated via Javascript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= ABOUT TAB ================= -->
-        <section id="tab-about" class="tab-content hidden space-y-8 animate-fade-in">
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 max-w-3xl mx-auto space-y-6">
-                <div class="flex items-center space-x-4 pb-6 border-b border-slate-100">
-                    <div class="bg-finance-100 text-finance-700 p-4 rounded-full text-2xl">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-slate-900">Project Overview</h2>
-                        <p class="text-sm text-slate-500">Academic Financial Analysis Web Application</p>
-                    </div>
-                </div>
-
-                <div class="space-y-4 text-slate-700 leading-relaxed">
-                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                        <span class="font-semibold text-slate-900 block mb-1">Student Name:</span>
-                        <p class="text-lg text-finance-800 font-medium">Breanna Ray</p>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-lg mb-2">Project Description</h3>
-                        <p>
-                            This web application was developed as part of a quantitative finance coursework requirement. It leverages modern web technologies (HTML5, Tailwind CSS, and JavaScript with Chart.js) to build a fully functional, responsive financial calculator website. 
-                        </p>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-lg mb-2">Core Methodologies & Calculations</h3>
-                        <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600">
-                            <li><strong>Holding-Period Return (HPR):</strong> Measures total return including price appreciation over the selected time horizon.</li>
-                            <li><strong>Annualized Return (CAGR):</strong> Converts multi-year or fractional-year returns into an annualized compound rate.</li>
-                            <li><strong>Sharpe Ratio:</strong> Evaluates excess returns per unit of total risk (standard deviation) relative to the risk-free rate.</li>
-                            <li><strong>Systematic Risk & Valuation:</strong> Computes asset betas relative to market benchmarks alongside fundamental valuation metrics (P/E, Dividend Yield, and Market Capitalization).</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= CONTACT TAB ================= -->
-        <section id="tab-contact" class="tab-content hidden space-y-8 animate-fade-in">
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 max-w-xl mx-auto space-y-6">
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-900">Contact Information</h2>
-                    <p class="text-sm text-slate-500">Reach out regarding this financial analysis project or codebase.</p>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
-                        <div class="text-finance-600 text-xl"><i class="fa-solid fa-user"></i></div>
-                        <div>
-                            <span class="text-xs text-slate-400 block font-semibold uppercase">Student Name</span>
-                            <span class="font-medium text-slate-900">Breanna Ray</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
-                        <div class="text-finance-600 text-xl"><i class="fa-solid fa-envelope"></i></div>
-                        <div>
-                            <span class="text-xs text-slate-400 block font-semibold uppercase">Email Address</span>
-                            <span class="font-medium text-slate-900">breannamray@gmail.com</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
-                        <div class="text-finance-600 text-xl"><i class="fa-solid fa-code-branch"></i></div>
-                        <div>
-                            <span class="text-xs text-slate-400 block font-semibold uppercase">GitHub Repository</span>
-                            <span class="font-medium text-slate-900">github.com/username/financial-calculator</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center text-sm space-y-2">
-            <p>&copy; 2026 FinMetrics Pro | Developed by Breanna Ray for Financial Analysis coursework.</p>
-            <p class="text-xs text-slate-500">Hosted via GitHub Pages.</p>
+    <div class="container">
+        <!-- HOME TAB -->
+        <div id="home" class="tab-content active">
+            <h2>Welcome to the Financial Analysis Hub</h2>
+            <p>This web application is designed to provide rapid quantitative insights, performance benchmarking, and risk evaluation tools for modern investors and finance students.</p>
+            <p>Use the <strong>Financial Analysis</strong> tab to calculate core portfolio metrics including Holding-Period Returns, Sharpe Ratios, Volatility, and Beta relative to market indexes.</p>
         </div>
+
+        <!-- ABOUT TAB -->
+        <div id="about" class="tab-content">
+            <h2>About the Project</h2>
+            <p><strong>Student Name:</strong> Breanna Ray</p>
+            <p><strong>Project Purpose:</strong> Built as part of an AI-assisted financial engineering curriculum, this website combines web technologies with advanced financial mathematics. The platform leverages modern JavaScript and Chart.js to process and visualize security pricing data, risk measures, and portfolio performance indicators instantly.</p>
+        </div>
+
+        <!-- FINANCIAL ANALYSIS TAB -->
+        <div id="analysis" class="tab-content">
+            <h2>Quantitative Financial Calculator</h2>
+            <p>Input your parameters below to evaluate asset performance, risk metrics, and efficiency measures.</p>
+            
+            <div class="calc-grid">
+                <div>
+                    <div class="form-group">
+                        <label for="initialPrice">Initial Price / Portfolio Value ($)</label>
+                        <input type="number" id="initialPrice" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="finalPrice">Ending Price / Portfolio Value ($)</label>
+                        <input type="number" id="finalPrice" value="125">
+                    </div>
+                    <div class="form-group">
+                        <label for="dividends">Dividends Received ($)</label>
+                        <input type="number" id="dividends" value="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="riskFreeRate">Risk-Free Rate (%)</label>
+                        <input type="number" id="riskFreeRate" value="4.0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="marketReturn">Market Return (%)</label>
+                        <input type="number" id="marketReturn" value="10.0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="stdDev">Asset Volatility (Standard Deviation %)</label>
+                        <input type="number" id="stdDev" value="15.0" step="0.1">
+                    </div>
+                    <button onclick="calculateFinancials()">Calculate Metrics</button>
+                </div>
+
+                <div>
+                    <div class="results-box">
+                        <h3>Calculated Outputs</h3>
+                        <div class="metric-row">
+                            <span>Holding-Period Return (HPR):</span>
+                            <strong id="resHPR">--</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Excess Return (vs Risk-Free):</span>
+                            <strong id="resExcess">--</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Sharpe Ratio:</span>
+                            <strong id="resSharpe">--</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Estimated Beta ($\beta$):</span>
+                            <strong id="resBeta">1.10</strong>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <canvas id="performanceChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTACT TAB -->
+        <div id="contact" class="tab-content">
+            <h2>Contact Information</h2>
+            <p>If you have questions about this project or would like to discuss the financial models implemented here, please reach out:</p>
+            <p><strong>Name:</strong> Breanna Ray</p>
+            <p><strong>Email:</strong> <a href="mailto:breannamray@gmail.com">breannamray@gmail.com</a></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Breanna Ray. All rights reserved.</p>
     </footer>
 
-    <!-- JavaScript Application Logic -->
     <script>
-        // Tab switching logic
+        let myChart = null;
+
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-finance-600', 'text-white');
-                btn.classList.add('text-slate-300', 'hover:bg-slate-800');
-            });
-
-            const activeBtn = document.getElementById(`nav-${tabId}`);
-            if(activeBtn) {
-                activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800');
-                activeBtn.classList.add('bg-finance-600', 'text-white');
-            }
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            if (tabId === 'analysis') {
-                runCalculations();
-            } else if (tabId === 'market') {
-                renderMarketTable();
-            }
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('link-' + tabId).classList.add('active');
         }
 
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+        function calculateFinancials() {
+            const p0 = parseFloat(document.getElementById('initialPrice').value);
+            const p1 = parseFloat(document.getElementById('finalPrice').value);
+            const div = parseFloat(document.getElementById('dividends').value);
+            const rf = parseFloat(document.getElementById('riskFreeRate').value);
+            const sd = parseFloat(document.getElementById('stdDev').value);
+
+            // Calculations
+            const hpr = ((p1 - p0 + div) / p0) * 100;
+            const excessReturn = hpr - rf;
+            const sharpeRatio = sd > 0 ? (excessReturn / sd) : 0;
+
+            // Display Results
+            document.getElementById('resHPR').innerText = hpr.toFixed(2) + '%';
+            document.getElementById('resExcess').innerText = excessReturn.toFixed(2) + '%';
+            document.getElementById('resSharpe').innerText = sharpeRatio.toFixed(2);
+
+            updateChart(p0, p1 + div);
         }
 
-        // Mock data for assets
-        const assetData = {
-            'AAPL': { name: 'Apple Inc.', price: 185.50, cap: '$2.85T', pe: 31.2, div: '0.52%', beta: 1.12, vol: '22.4%' },
-            'MSFT': { name: 'Microsoft Corp.', price: 420.00, cap: '$3.12T', pe: 36.5, div: '0.71%', beta: 0.98, vol: '19.8%' },
-            'GOOGL': { name: 'Alphabet Inc.', price: 175.20, cap: '$2.18T', pe: 27.4, div: '0.46%', beta: 1.05, vol: '24.1%' },
-            'AMZN': { name: 'Amazon.com Inc.', price: 180.10, cap: '$1.89T', pe: 51.0, div: '0.00%', beta: 1.18, vol: '27.5%' },
-            'JPM': { name: 'JPMorgan Chase & Co.', price: 198.40, cap: '$570B', pe: 12.1, div: '2.25%', beta: 1.08, vol: '17.2%' }
-        };
-
-        let returnChartInstance = null;
-        let riskChartInstance = null;
-
-        function runCalculations() {
-            const ticker = document.getElementById('calc-asset').value;
-            const p0 = parseFloat(document.getElementById('calc-p0').value) || 1;
-            const pt = parseFloat(document.getElementById('calc-pt').value) || 1;
-            const years = parseFloat(document.getElementById('calc-years').value) || 1;
-
-            // 1. Holding-Period Return (HPR)
-            const hpr = ((pt - p0) / p0) * 100;
-
-            // 2. Annualized Return (CAGR)
-            const annualized = (Math.pow(pt / p0, 1 / years) - 1) * 100;
-
-            // 3. Sharpe Ratio calculation (assuming risk-free rate = 2%)
-            const riskFreeRate = 2.0;
-            const assetVolNum = parseFloat(assetData[ticker].vol);
-            const sharpe = (annualized - riskFreeRate) / assetVolNum;
-
-            // Update UI elements
-            document.getElementById('res-hpr').innerText = hpr.toFixed(2) + '%';
-            document.getElementById('res-annualized').innerText = annualized.toFixed(2) + '%';
-            document.getElementById('res-sharpe').innerText = sharpe.toFixed(2);
-            document.getElementById('res-beta-vol').innerText = `β: ${assetData[ticker].beta} | σ: ${assetData[ticker].vol}`;
-
-            updateCharts(ticker, hpr, annualized);
-        }
-
-        function updateCharts(ticker, hpr, annualized) {
-            // Return Chart
-            const ctx1 = document.getElementById('returnChart').getContext('2d');
-            if(returnChartInstance) returnChartInstance.destroy();
-
-            returnChartInstance = new Chart(ctx1, {
+        function updateChart(start, end) {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            if (myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Holding Period Return', 'Annualized Return (CAGR)', 'Market Benchmark'],
+                    labels: ['Initial Value', 'Ending Value (w/ Div)'],
                     datasets: [{
-                        label: `${ticker} Performance (%)`,
-                        data: [hpr, annualized, 10.5],
-                        backgroundColor: ['#16a34a', '#2563eb', '#94a3b8'],
-                        borderRadius: 6
+                        label: 'Portfolio Value ($)',
+                        data: [start, end],
+                        backgroundColor: ['#3b82f6', '#10b981'],
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
                     scales: { y: { beginAtZero: true } }
                 }
             });
-
-            // Risk vs Return Chart
-            const ctx2 = document.getElementById('riskReturnChart').getContext('2d');
-            if(riskChartInstance) riskChartInstance.destroy();
-
-            riskChartInstance = new Chart(ctx2, {
-                type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'Selected Asset',
-                        data: [{ x: parseFloat(assetData[ticker].vol), y: annualized }],
-                        backgroundColor: '#16a34a',
-                        pointRadius: 8
-                    }, {
-                        label: 'S&P 500 Benchmark',
-                        data: [{ x: 15.0, y: 10.5 }],
-                        backgroundColor: '#64748b',
-                        pointRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { title: { display: true, text: 'Volatility (Std Dev %)' }, min: 10, max: 35 },
-                        y: { title: { display: true, text: 'Return (%)' } }
-                    }
-                }
-            });
         }
 
-        function renderMarketTable() {
-            const tbody = document.getElementById('market-table-body');
-            tbody.innerHTML = '';
-
-            for(const [ticker, data] of Object.entries(assetData)) {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-slate-50 transition';
-                row.innerHTML = `
-                    <td class="px-6 py-4 font-bold text-slate-900">${ticker}</td>
-                    <td class="px-6 py-4 text-slate-700">${data.name}</td>
-                    <td class="px-6 py-4 text-right font-medium">$${data.price.toFixed(2)}</td>
-                    <td class="px-6 py-4 text-right">${data.cap}</td>
-                    <td class="px-6 py-4 text-right">${data.pe}</td>
-                    <td class="px-6 py-4 text-right">${data.div}</td>
-                    <td class="px-6 py-4 text-right font-semibold text-finance-700">${data.beta}</td>
-                `;
-                tbody.appendChild(row);
-            }
-        }
-
-        // Initialize Market table on load
-        window.addEventListener('DOMContentLoaded', () => {
-            renderMarketTable();
-        });
+        // Run initial calculation on load
+        window.onload = calculateFinancials;
     </script>
 </body>
 </html>
