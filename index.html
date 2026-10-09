@@ -177,4 +177,120 @@
                     <span class="text-xs text-slate-500 mt-1 block">Compound annual growth rate (CAGR)</span>
                 </div>
                 <!-- Metric 3 -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-amber-500
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-amber-500">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Sharpe Ratio (Rf = 2%)</span>
+                    <div class="text-2xl font-bold text-slate-900 mt-1" id="res-sharpe">--</div>
+                    <span class="text-xs text-slate-500 mt-1 block">Risk-adjusted performance measure</span>
+                </div>
+                <!-- Metric 4 -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-purple-600">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Beta & Volatility</span>
+                    <div class="text-xl font-bold text-slate-900 mt-1" id="res-beta-vol">--</div>
+                    <span class="text-xs text-slate-500 mt-1 block">Systematic risk (Beta) & Std. Dev.</span>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold text-slate-900 mb-4">Historical Return Comparison</h3>
+                    <div class="h-64 relative">
+                        <canvas id="returnChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold text-slate-900 mb-4">Risk vs. Return Profile</h3>
+                    <div class="h-64 relative">
+                        <canvas id="riskReturnChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= MARKET WATCH TAB ================= -->
+        <section id="tab-market" class="tab-content hidden space-y-8 animate-fade-in">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Market & Firm Characteristics</h2>
+                    <p class="text-sm text-slate-500">Fundamental metrics, P/E ratios, dividend yields, and market capitalizations for benchmark assets.</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-50 text-slate-600 font-semibold uppercase tracking-wider">
+                            <tr>
+                                <th class="px-6 py-3 text-left">Ticker</th>
+                                <th class="px-6 py-3 text-left">Company Name</th>
+                                <th class="px-6 py-3 text-right">Stock Price</th>
+                                <th class="px-6 py-3 text-right">Market Cap</th>
+                                <th class="px-6 py-3 text-right">P/E Ratio</th>
+                                <th class="px-6 py-3 text-right">Dividend Yield</th>
+                                <th class="px-6 py-3 text-right">Beta</th>
+                            </tr>
+                        </thead>
+                        <tbody id="market-table-body" class="divide-y divide-slate-200 bg-white">
+                            <!-- Populated via Javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ABOUT TAB ================= -->
+        <section id="tab-about" class="tab-content hidden space-y-8 animate-fade-in">
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 max-w-3xl mx-auto space-y-6">
+                <div class="flex items-center space-x-4 pb-6 border-b border-slate-100">
+                    <div class="bg-finance-100 text-finance-700 p-4 rounded-full text-2xl">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Project Overview</h2>
+                        <p class="text-sm text-slate-500">Academic Financial Analysis Web Application</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 text-slate-700 leading-relaxed">
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <span class="font-semibold text-slate-900 block mb-1">Student Name:</span>
+                        <p class="text-lg text-finance-800 font-medium">Breanna Ray</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">Project Description</h3>
+                        <p>
+                            This web application was developed by Breanna Ray as part of a quantitative finance coursework requirement. It leverages modern web technologies (HTML5, Tailwind CSS, and JavaScript with Chart.js) to build a fully functional, responsive financial calculator website. 
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">Core Methodologies & Calculations</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600">
+                            <li><strong>Holding-Period Return (HPR):</strong> Measures total return including price appreciation over the selected time horizon.</li>
+                            <li><strong>Annualized Return (CAGR):</strong> Converts multi-year or fractional-year returns into an annualized compound rate.</li>
+                            <li><strong>Sharpe Ratio:</strong> Evaluates excess returns per unit of total risk (standard deviation) relative to the risk-free rate.</li>
+                            <li><strong>Systematic Risk & Valuation:</strong> Computes asset betas relative to market benchmarks alongside fundamental valuation metrics (P/E, Dividend Yield, and Market Capitalization).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CONTACT TAB ================= -->
+        <section id="tab-contact" class="tab-content hidden space-y-8 animate-fade-in">
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 max-w-xl mx-auto space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Contact Information</h2>
+                    <p class="text-sm text-slate-500">Reach out regarding this financial analysis project or codebase.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                        <div class="text-finance-600 text-xl"><i class="fa-solid fa-user"></i></div>
+                        <div>
+                            <span class="text-xs text-slate-400 block font-semibold uppercase">Student Name</span>
+                            <span class="font-medium text-slate-900">Breanna Ray</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                        <div class="text-finance-600 text-xl"><i class="fa-solid fa-envelope"></i></div>
+                        <div>
+                            <span class="text-xs text-slate-400 block font-semibold uppercase">Email Address</span>
+                            <span class="font-medium text-slate-900">breannamray@gmail.com</span>
